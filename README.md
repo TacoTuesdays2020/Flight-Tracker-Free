@@ -8,9 +8,14 @@ identification, and route info — no paid API keys required.
 ## Features
 
 - **Live map** of air traffic (`react-native-maps`) centered on your location,
-  refreshing on a timer and re-querying as you pan/zoom.
+  refreshing on a timer and re-querying as you pan/zoom, styled as a dark,
+  muted map on both iOS and Android.
 - **Commercial / Private / Helicopter / Military / Other** filtering, with a
   colored legend and per-category counts.
+- **Type-specific aircraft icons** — the marker shape (not just its color)
+  reflects the airframe: airliner, private jet, small single-engine
+  propeller (Cessna-style), helicopter, or military, inferred from OpenSky's
+  ADS-B emitter category (see `src/classify/aircraftIcon.ts`).
 - **Searchable flight list** sorted by distance, with the same filters.
 - **Flight detail screen**: live position, altitude (baro + GPS), ground
   speed, heading, vertical rate, squawk, position source, a mini live-updating
@@ -85,13 +90,13 @@ personal use but more tightly rate-limited.
 App.tsx                     # Providers + root navigator
 src/
   api/                       # OpenSky + hexdb.io clients and shared types
-  classify/                  # Commercial/private/helicopter heuristic
+  classify/                  # Commercial/private/helicopter heuristic + icon-shape mapping
   components/                # Map markers, filter chips, list rows, info panels
   context/                   # Settings & Favorites (AsyncStorage/SecureStore)
   hooks/                     # useLiveFlights, useAircraftTelemetry, useAircraftDetails, useUserLocation
   navigation/                # Bottom tabs (Map/List/Favorites/Settings) + Detail stack screen
   screens/                   # Map, List, Detail, Favorites, Settings
-  theme/                     # Light/dark theme + per-category colors
+  theme/                     # Single sleek dark theme + per-category colors
   utils/                     # Unit formatting, distance calc
 ```
 

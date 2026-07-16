@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
-import { View } from 'react-native';
 import { Marker } from 'react-native-maps';
-import { Ionicons } from '@expo/vector-icons';
 import type { FlightState } from '../api/types';
 import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
+import { getFlightIconType } from '../classify/aircraftIcon';
+import { AircraftGlyph } from './icons/AircraftGlyph';
 
 interface AircraftMarkerProps {
   flight: FlightState;
@@ -20,7 +20,6 @@ function AircraftMarkerImpl({ flight, onPress }: AircraftMarkerProps) {
 
   if (flight.latitude == null || flight.longitude == null) return null;
   const color = AIRCRAFT_CLASS_COLORS[flight.aircraftClass];
-  const iconName = flight.aircraftClass === 'helicopter' ? 'airplane' : 'airplane-sharp';
 
   return (
     <Marker
@@ -31,13 +30,7 @@ function AircraftMarkerImpl({ flight, onPress }: AircraftMarkerProps) {
       title={flight.callsign?.trim() || flight.icao24.toUpperCase()}
       description={flight.originCountry}
     >
-      <View
-        style={{
-          transform: [{ rotate: `${(flight.trueTrack ?? 0) - 45}deg` }],
-        }}
-      >
-        <Ionicons name={iconName} size={22} color={color} />
-      </View>
+      <AircraftGlyph type={getFlightIconType(flight)} color={color} size={24} rotationDeg={flight.trueTrack ?? 0} />
     </Marker>
   );
 }

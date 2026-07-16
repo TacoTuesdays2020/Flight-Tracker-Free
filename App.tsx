@@ -14,7 +14,7 @@ export default function App() {
         <SettingsProvider>
           <FavoritesProvider>
             <RootNavigator />
-            <StatusBar style="auto" />
+            <StatusBar style="light" />
           </FavoritesProvider>
         </SettingsProvider>
       </SafeAreaProvider>

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import type { RootStackScreenProps } from '../navigation/types';
 import { InfoRow, InfoSection } from '../components/InfoSection';
@@ -11,8 +11,10 @@ import { useFavorites } from '../context/FavoritesContext';
 import { useSettings } from '../context/SettingsContext';
 import { useTheme } from '../theme/useTheme';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
+import { getAircraftIconType } from '../classify/aircraftIcon';
 import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
 import { EMITTER_CATEGORY_LABELS } from '../api/types';
+import { AircraftGlyph } from '../components/icons/AircraftGlyph';
 import {
   formatAltitude,
   formatCoordinate,
@@ -75,6 +77,8 @@ export function DetailScreen({ route, navigation }: Props) {
           <MapView
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
+            provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
+            userInterfaceStyle="dark"
             initialRegion={{
               latitude: position.latitude,
               longitude: position.longitude,
@@ -93,9 +97,12 @@ export function DetailScreen({ route, navigation }: Props) {
               <Polyline coordinates={track} strokeColor={classColor} strokeWidth={2} />
             )}
             <Marker coordinate={position} anchor={{ x: 0.5, y: 0.5 }}>
-              <View style={{ transform: [{ rotate: `${(state?.trueTrack ?? 0) - 45}deg` }] }}>
-                <Ionicons name="airplane-sharp" size={26} color={classColor} />
-              </View>
+              <AircraftGlyph
+                type={state ? getAircraftIconType(state) : 'propeller'}
+                color={classColor}
+                size={28}
+                rotationDeg={state?.trueTrack ?? 0}
+              />
             </Marker>
           </MapView>
         </View>

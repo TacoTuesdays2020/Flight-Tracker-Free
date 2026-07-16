@@ -77,6 +77,7 @@ export function MapScreen({ navigation }: Props) {
         ref={mapRef}
         style={StyleSheet.absoluteFill}
         provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
+        userInterfaceStyle="dark"
         initialRegion={initialRegion ?? DEFAULT_REGION}
         onRegionChangeComplete={onRegionChangeComplete}
         showsUserLocation

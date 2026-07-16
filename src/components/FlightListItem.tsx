@@ -1,12 +1,13 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import type { FlightState } from '../api/types';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
+import { getFlightIconType } from '../classify/aircraftIcon';
 import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
 import { useTheme } from '../theme/useTheme';
 import { useSettings } from '../context/SettingsContext';
 import { formatAltitude, formatSpeed } from '../utils/format';
+import { AircraftGlyph } from './icons/AircraftGlyph';
 
 interface FlightListItemProps {
   flight: FlightState;
@@ -28,11 +29,11 @@ export function FlightListItem({ flight, onPress, distanceLabel }: FlightListIte
       ]}
     >
       <View style={[styles.iconWrap, { backgroundColor: color + '22' }]}>
-        <Ionicons
-          name={flight.aircraftClass === 'helicopter' ? 'airplane' : 'airplane-outline'}
-          size={20}
+        <AircraftGlyph
+          type={getFlightIconType(flight)}
           color={color}
-          style={{ transform: [{ rotate: `${(flight.trueTrack ?? 0) - 45}deg` }] }}
+          size={20}
+          rotationDeg={flight.trueTrack ?? 0}
         />
       </View>
       <View style={styles.info}>

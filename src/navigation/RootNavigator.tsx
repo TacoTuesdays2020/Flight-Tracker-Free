@@ -1,9 +1,8 @@
 import React from 'react';
-import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'react-native';
 import type { RootStackParamList, TabParamList } from './types';
 import { MapScreen } from '../screens/MapScreen';
 import { ListScreen } from '../screens/ListScreen';
@@ -55,12 +54,11 @@ function Tabs() {
 
 export function RootNavigator() {
   const theme = useTheme();
-  const scheme = useColorScheme();
 
   const navTheme = {
-    ...(scheme === 'dark' ? DarkTheme : DefaultTheme),
+    ...DarkTheme,
     colors: {
-      ...(scheme === 'dark' ? DarkTheme.colors : DefaultTheme.colors),
+      ...DarkTheme.colors,
       background: theme.background,
       card: theme.surface,
       text: theme.text,
