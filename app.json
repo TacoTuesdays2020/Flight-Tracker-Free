@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Flight Tracker Free",
+    "slug": "flight-tracker-free",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "flighttracker",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Flight Tracker Free uses your location to center the live map on nearby air traffic."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.flighttrackerfree.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Flight Tracker Free uses your location to center the live map on nearby air traffic."
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.flighttrackerfree.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1220",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "openSkyClientId": "",
+      "openSkyClientSecret": ""
+    }
+  }
+}
