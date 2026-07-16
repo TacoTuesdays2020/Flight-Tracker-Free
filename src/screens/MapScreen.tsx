@@ -108,7 +108,7 @@ export function MapScreen({ navigation }: Props) {
       </View>
 
       <Pressable onPress={recenter} style={styles.recenterButtonWrap}>
-        <GlossySurface style={[styles.recenterButton, { borderColor: theme.border }]}>
+        <GlossySurface style={styles.recenterButton}>
           <Ionicons name="locate" size={21} color={theme.text} />
         </GlossySurface>
       </Pressable>
@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

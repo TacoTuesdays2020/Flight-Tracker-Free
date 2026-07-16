@@ -25,18 +25,11 @@ export function FilterChips({ selected, onToggle, counts }: FilterChipsProps) {
     >
       {AIRCRAFT_CLASS_ORDER.map((cls) => {
         const isSelected = selected.has(cls);
-        const textColor = isSelected ? theme.onPrimary : theme.text;
-        // Selected pill inverts to black-on-white, so the icon stays black
-        // for legibility; unselected chips show the class's real accent.
-        const iconColor = isSelected ? theme.onPrimary : AIRCRAFT_CLASS_COLORS[cls];
         return (
           <Pressable key={cls} onPress={() => onToggle(cls)}>
-            <GlossySurface
-              tint={isSelected ? 'light' : 'dark'}
-              style={[styles.chip, !isSelected && { borderColor: theme.border, borderWidth: 1 }]}
-            >
-              <AircraftGlyph type={CLASS_REPRESENTATIVE_ICON[cls]} color={iconColor} size={15} />
-              <Text style={[styles.label, { color: textColor }]}>
+            <GlossySurface intensity={isSelected ? 'high' : 'low'} style={styles.chip}>
+              <AircraftGlyph type={CLASS_REPRESENTATIVE_ICON[cls]} color={AIRCRAFT_CLASS_COLORS[cls]} size={15} />
+              <Text style={[styles.label, { color: theme.text }]}>
                 {AIRCRAFT_CLASS_LABELS[cls]}
                 {counts?.[cls] != null ? ` (${counts[cls]})` : ''}
               </Text>

@@ -60,17 +60,8 @@ export function SettingsScreen() {
             const isSelected = refreshIntervalSeconds === seconds;
             return (
               <Pressable key={seconds} onPress={() => setRefreshIntervalSeconds(seconds)}>
-                <GlossySurface
-                  tint={isSelected ? 'light' : 'dark'}
-                  style={[styles.option, !isSelected && { borderColor: theme.border, borderWidth: 1 }]}
-                >
-                  <Text
-                    style={{
-                      color: isSelected ? theme.onPrimary : theme.text,
-                      fontWeight: '600',
-                      fontSize: 13,
-                    }}
-                  >
+                <GlossySurface intensity={isSelected ? 'high' : 'low'} style={styles.option}>
+                  <Text style={{ color: theme.text, fontWeight: '600', fontSize: 13 }}>
                     {seconds}s
                   </Text>
                 </GlossySurface>
@@ -108,8 +99,8 @@ export function SettingsScreen() {
           style={[styles.input, { color: theme.text, borderColor: theme.border }]}
         />
         <Pressable onPress={saveCredentials}>
-          <GlossySurface tint="light" style={styles.saveButton}>
-            <Text style={[styles.saveButtonText, { color: theme.onPrimary }]}>Save credentials</Text>
+          <GlossySurface intensity="high" style={styles.saveButton}>
+            <Text style={[styles.saveButtonText, { color: theme.text }]}>Save credentials</Text>
           </GlossySurface>
         </Pressable>
         <Pressable onPress={() => Linking.openURL('https://opensky-network.org/my-opensky/account')}>
@@ -141,7 +132,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
-    borderWidth: 1,
   },
   hint: { fontSize: 12, lineHeight: 17 },
   input: {
