@@ -12,7 +12,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTheme } from '../theme/useTheme';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
 import { getAircraftIconType } from '../classify/aircraftIcon';
-import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
+import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
 import { EMITTER_CATEGORY_LABELS } from '../api/types';
 import { AircraftGlyph } from '../components/icons/AircraftGlyph';
 import {
@@ -36,7 +36,6 @@ export function DetailScreen({ route, navigation }: Props) {
   const { aircraftInfo, routeInfo } = useAircraftDetails(icao24, callsign);
 
   const favorite = isFavorite(icao24);
-  const classColor = state ? AIRCRAFT_CLASS_COLORS[state.aircraftClass] : theme.textMuted;
 
   const displayName = callsign?.trim() || icao24.toUpperCase();
 
@@ -56,7 +55,7 @@ export function DetailScreen({ route, navigation }: Props) {
           <Ionicons
             name={favorite ? 'star' : 'star-outline'}
             size={22}
-            color={favorite ? '#F2C94C' : theme.textMuted}
+            color={favorite ? theme.primary : theme.textMuted}
           />
         </Pressable>
       ),
@@ -94,12 +93,12 @@ export function DetailScreen({ route, navigation }: Props) {
             customMapStyle={theme.mapStyle as any}
           >
             {track.length > 1 && (
-              <Polyline coordinates={track} strokeColor={classColor} strokeWidth={2} />
+              <Polyline coordinates={track} strokeColor={theme.textMuted} strokeWidth={2} />
             )}
             <Marker coordinate={position} anchor={{ x: 0.5, y: 0.5 }}>
               <AircraftGlyph
                 type={state ? getAircraftIconType(state) : 'propeller'}
-                color={classColor}
+                color={AIRCRAFT_ICON_COLOR}
                 size={28}
                 rotationDeg={state?.trueTrack ?? 0}
               />
@@ -117,9 +116,13 @@ export function DetailScreen({ route, navigation }: Props) {
         </Text>
       )}
 
-      <View style={[styles.badge, { backgroundColor: classColor + '22' }]}>
-        <View style={[styles.dot, { backgroundColor: classColor }]} />
-        <Text style={[styles.badgeText, { color: classColor }]}>
+      <View style={[styles.badge, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
+        <AircraftGlyph
+          type={state ? getAircraftIconType(state) : 'propeller'}
+          color={theme.text}
+          size={13}
+        />
+        <Text style={[styles.badgeText, { color: theme.text }]}>
           {state ? AIRCRAFT_CLASS_LABELS[state.aircraftClass] : 'Unknown class'}
         </Text>
       </View>
@@ -191,12 +194,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 6,
     borderRadius: 16,
+    borderWidth: 1,
   },
-  dot: { width: 8, height: 8, borderRadius: 4 },
   badgeText: { fontSize: 12, fontWeight: '700' },
   attribution: { fontSize: 11, textAlign: 'center', paddingHorizontal: 12, marginTop: 4 },
 });

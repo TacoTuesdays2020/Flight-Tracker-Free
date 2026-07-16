@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { FlightState } from '../api/types';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
 import { getFlightIconType } from '../classify/aircraftIcon';
-import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
+import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
 import { useTheme } from '../theme/useTheme';
 import { useSettings } from '../context/SettingsContext';
 import { formatAltitude, formatSpeed } from '../utils/format';
@@ -18,7 +18,6 @@ interface FlightListItemProps {
 export function FlightListItem({ flight, onPress, distanceLabel }: FlightListItemProps) {
   const theme = useTheme();
   const { units } = useSettings();
-  const color = AIRCRAFT_CLASS_COLORS[flight.aircraftClass];
 
   return (
     <Pressable
@@ -28,10 +27,10 @@ export function FlightListItem({ flight, onPress, distanceLabel }: FlightListIte
         { backgroundColor: theme.surface, borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
       ]}
     >
-      <View style={[styles.iconWrap, { backgroundColor: color + '22' }]}>
+      <View style={[styles.iconWrap, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
         <AircraftGlyph
           type={getFlightIconType(flight)}
-          color={color}
+          color={AIRCRAFT_ICON_COLOR}
           size={20}
           rotationDeg={flight.trueTrack ?? 0}
         />
@@ -69,6 +68,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

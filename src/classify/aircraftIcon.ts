@@ -31,3 +31,12 @@ export function getAircraftIconType(flight: {
 export function getFlightIconType(flight: FlightState): AircraftIconType {
   return getAircraftIconType(flight);
 }
+
+/** A representative silhouette per class, for chip/legend UI that shows one icon per class rather than per flight. */
+export const CLASS_REPRESENTATIVE_ICON: Record<AircraftClass, AircraftIconType> = {
+  commercial: 'airliner',
+  private: 'jet',
+  helicopter: 'helicopter',
+  military: 'military',
+  other: 'propeller',
+};

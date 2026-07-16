@@ -11,6 +11,7 @@ import { useUserLocation, DEFAULT_REGION, type Region } from '../hooks/useUserLo
 import type { AircraftClass, BoundingBox } from '../api/types';
 import { AIRCRAFT_CLASS_ORDER } from '../classify/aircraftType';
 import { useTheme } from '../theme/useTheme';
+import { GlossySurface } from '../components/GlossySurface';
 import { formatLastContact } from '../utils/format';
 
 const MAX_DELTA = 12; // clamp query box so panning out doesn't request the whole globe at once
@@ -106,11 +107,10 @@ export function MapScreen({ navigation }: Props) {
         </Text>
       </View>
 
-      <Pressable
-        onPress={recenter}
-        style={[styles.recenterButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
-      >
-        <Ionicons name="locate" size={22} color={theme.primary} />
+      <Pressable onPress={recenter} style={styles.recenterButtonWrap}>
+        <GlossySurface style={[styles.recenterButton, { borderColor: theme.border }]}>
+          <Ionicons name="locate" size={21} color={theme.text} />
+        </GlossySurface>
       </Pressable>
     </View>
   );
@@ -137,16 +137,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
   },
-  recenterButton: {
+  recenterButtonWrap: {
     position: 'absolute',
     right: 12,
     bottom: 56,
+    elevation: 3,
+  },
+  recenterButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
   },
 });

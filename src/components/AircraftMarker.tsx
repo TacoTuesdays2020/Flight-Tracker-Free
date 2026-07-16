@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
 import type { FlightState } from '../api/types';
-import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
+import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
 import { getFlightIconType } from '../classify/aircraftIcon';
 import { AircraftGlyph } from './icons/AircraftGlyph';
 
@@ -19,7 +19,6 @@ function AircraftMarkerImpl({ flight, onPress }: AircraftMarkerProps) {
   }, []);
 
   if (flight.latitude == null || flight.longitude == null) return null;
-  const color = AIRCRAFT_CLASS_COLORS[flight.aircraftClass];
 
   return (
     <Marker
@@ -30,7 +29,12 @@ function AircraftMarkerImpl({ flight, onPress }: AircraftMarkerProps) {
       title={flight.callsign?.trim() || flight.icao24.toUpperCase()}
       description={flight.originCountry}
     >
-      <AircraftGlyph type={getFlightIconType(flight)} color={color} size={24} rotationDeg={flight.trueTrack ?? 0} />
+      <AircraftGlyph
+        type={getFlightIconType(flight)}
+        color={AIRCRAFT_ICON_COLOR}
+        size={24}
+        rotationDeg={flight.trueTrack ?? 0}
+      />
     </Marker>
   );
 }

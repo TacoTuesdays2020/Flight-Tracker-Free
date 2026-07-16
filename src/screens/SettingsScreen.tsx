@@ -12,6 +12,7 @@ import {
 import { REFRESH_INTERVAL_OPTIONS, useSettings } from '../context/SettingsContext';
 import { useTheme } from '../theme/useTheme';
 import { InfoSection } from '../components/InfoSection';
+import { GlossySurface } from '../components/GlossySurface';
 
 export function SettingsScreen() {
   const theme = useTheme();
@@ -46,35 +47,36 @@ export function SettingsScreen() {
           <Switch
             value={units === 'metric'}
             onValueChange={(v) => setUnits(v ? 'metric' : 'imperial')}
+            trackColor={{ false: theme.surfaceAlt, true: theme.primary }}
+            thumbColor="#ffffff"
+            ios_backgroundColor={theme.surfaceAlt}
           />
         </View>
       </InfoSection>
 
       <InfoSection title="Refresh rate">
         <View style={styles.optionsRow}>
-          {REFRESH_INTERVAL_OPTIONS.map((seconds) => (
-            <Pressable
-              key={seconds}
-              onPress={() => setRefreshIntervalSeconds(seconds)}
-              style={[
-                styles.option,
-                {
-                  backgroundColor: refreshIntervalSeconds === seconds ? theme.primary : theme.surfaceAlt,
-                  borderColor: theme.border,
-                },
-              ]}
-            >
-              <Text
-                style={{
-                  color: refreshIntervalSeconds === seconds ? '#fff' : theme.text,
-                  fontWeight: '600',
-                  fontSize: 13,
-                }}
-              >
-                {seconds}s
-              </Text>
-            </Pressable>
-          ))}
+          {REFRESH_INTERVAL_OPTIONS.map((seconds) => {
+            const isSelected = refreshIntervalSeconds === seconds;
+            return (
+              <Pressable key={seconds} onPress={() => setRefreshIntervalSeconds(seconds)}>
+                <GlossySurface
+                  tint={isSelected ? 'light' : 'dark'}
+                  style={[styles.option, !isSelected && { borderColor: theme.border, borderWidth: 1 }]}
+                >
+                  <Text
+                    style={{
+                      color: isSelected ? theme.onPrimary : theme.text,
+                      fontWeight: '600',
+                      fontSize: 13,
+                    }}
+                  >
+                    {seconds}s
+                  </Text>
+                </GlossySurface>
+              </Pressable>
+            );
+          })}
         </View>
         <Text style={[styles.hint, { color: theme.textMuted }]}>
           Lower intervals use more of your OpenSky rate-limit allowance.
@@ -105,14 +107,13 @@ export function SettingsScreen() {
           secureTextEntry
           style={[styles.input, { color: theme.text, borderColor: theme.border }]}
         />
-        <Pressable
-          onPress={saveCredentials}
-          style={[styles.saveButton, { backgroundColor: theme.primary }]}
-        >
-          <Text style={styles.saveButtonText}>Save credentials</Text>
+        <Pressable onPress={saveCredentials}>
+          <GlossySurface tint="light" style={styles.saveButton}>
+            <Text style={[styles.saveButtonText, { color: theme.onPrimary }]}>Save credentials</Text>
+          </GlossySurface>
         </Pressable>
         <Pressable onPress={() => Linking.openURL('https://opensky-network.org/my-opensky/account')}>
-          <Text style={[styles.link, { color: theme.primary }]}>
+          <Text style={[styles.link, { color: theme.text }]}>
             Get a free client ID / secret →
           </Text>
         </Pressable>
@@ -155,6 +156,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
   },
-  saveButtonText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  link: { fontSize: 12, fontWeight: '600' },
+  saveButtonText: { fontWeight: '700', fontSize: 13 },
+  link: { fontSize: 12, fontWeight: '600', textDecorationLine: 'underline' },
 });

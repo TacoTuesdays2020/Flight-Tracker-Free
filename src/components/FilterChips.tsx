@@ -1,9 +1,11 @@
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import type { AircraftClass } from '../api/types';
 import { AIRCRAFT_CLASS_LABELS, AIRCRAFT_CLASS_ORDER } from '../classify/aircraftType';
-import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
+import { CLASS_REPRESENTATIVE_ICON } from '../classify/aircraftIcon';
 import { useTheme } from '../theme/useTheme';
+import { GlossySurface } from './GlossySurface';
+import { AircraftGlyph } from './icons/AircraftGlyph';
 
 interface FilterChipsProps {
   selected: Set<AircraftClass>;
@@ -22,24 +24,19 @@ export function FilterChips({ selected, onToggle, counts }: FilterChipsProps) {
     >
       {AIRCRAFT_CLASS_ORDER.map((cls) => {
         const isSelected = selected.has(cls);
-        const color = AIRCRAFT_CLASS_COLORS[cls];
+        const inkColor = isSelected ? theme.onPrimary : theme.text;
         return (
-          <Pressable
-            key={cls}
-            onPress={() => onToggle(cls)}
-            style={[
-              styles.chip,
-              {
-                backgroundColor: isSelected ? color : theme.surface,
-                borderColor: color,
-              },
-            ]}
-          >
-            <View style={[styles.dot, { backgroundColor: isSelected ? '#fff' : color }]} />
-            <Text style={[styles.label, { color: isSelected ? '#fff' : theme.text }]}>
-              {AIRCRAFT_CLASS_LABELS[cls]}
-              {counts?.[cls] != null ? ` (${counts[cls]})` : ''}
-            </Text>
+          <Pressable key={cls} onPress={() => onToggle(cls)}>
+            <GlossySurface
+              tint={isSelected ? 'light' : 'dark'}
+              style={[styles.chip, !isSelected && { borderColor: theme.border, borderWidth: 1 }]}
+            >
+              <AircraftGlyph type={CLASS_REPRESENTATIVE_ICON[cls]} color={inkColor} size={15} />
+              <Text style={[styles.label, { color: inkColor }]}>
+                {AIRCRAFT_CLASS_LABELS[cls]}
+                {counts?.[cls] != null ? ` (${counts[cls]})` : ''}
+              </Text>
+            </GlossySurface>
           </Pressable>
         );
       })}
@@ -57,15 +54,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
-    borderWidth: 1.5,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    gap: 6,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    paddingVertical: 7,
+    gap: 7,
   },
   label: {
     fontSize: 13,

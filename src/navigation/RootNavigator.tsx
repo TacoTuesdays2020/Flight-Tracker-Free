@@ -3,6 +3,8 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { StyleSheet } from 'react-native';
 import type { RootStackParamList, TabParamList } from './types';
 import { MapScreen } from '../screens/MapScreen';
 import { ListScreen } from '../screens/ListScreen';
@@ -29,7 +31,10 @@ function Tabs() {
         headerShown: false,
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textMuted,
-        tabBarStyle: { backgroundColor: theme.tabBar, borderTopColor: theme.border },
+        tabBarStyle: { backgroundColor: 'transparent', borderTopColor: theme.border },
+        tabBarBackground: () => (
+          <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+        ),
         tabBarIcon: ({ color, size, focused }) => (
           <Ionicons
             name={

@@ -8,14 +8,17 @@ identification, and route info — no paid API keys required.
 ## Features
 
 - **Live map** of air traffic (`react-native-maps`) centered on your location,
-  refreshing on a timer and re-querying as you pan/zoom, styled as a dark,
-  muted map on both iOS and Android.
-- **Commercial / Private / Helicopter / Military / Other** filtering, with a
-  colored legend and per-category counts.
-- **Type-specific aircraft icons** — the marker shape (not just its color)
-  reflects the airframe: airliner, private jet, small single-engine
-  propeller (Cessna-style), helicopter, or military, inferred from OpenSky's
-  ADS-B emitter category (see `src/classify/aircraftIcon.ts`).
+  refreshing on a timer and re-querying as you pan/zoom, styled as a black
+  and white map on both iOS and Android.
+- **Commercial / Private / Helicopter / Military / Other** filtering.
+- **Type-specific aircraft icons** — every aircraft renders in the same
+  monochrome ink; the marker *shape* is what reflects the airframe: airliner,
+  private jet, small single-engine propeller (Cessna-style), helicopter, or
+  military, inferred from OpenSky's ADS-B emitter category (see
+  `src/classify/aircraftIcon.ts`).
+- **Pure black/white/grey UI** with glossy, specular-highlighted buttons and
+  frosted-glass surfaces (tab bar, pills) — no color anywhere except white on
+  black for selected/primary state.
 - **Searchable flight list** sorted by distance, with the same filters.
 - **Flight detail screen**: live position, altitude (baro + GPS), ground
   speed, heading, vertical rate, squawk, position source, a mini live-updating
@@ -96,7 +99,7 @@ src/
   hooks/                     # useLiveFlights, useAircraftTelemetry, useAircraftDetails, useUserLocation
   navigation/                # Bottom tabs (Map/List/Favorites/Settings) + Detail stack screen
   screens/                   # Map, List, Detail, Favorites, Settings
-  theme/                     # Single sleek dark theme + per-category colors
+  theme/                     # Pure black/white/grey palette + glossy surface tokens
   utils/                     # Unit formatting, distance calc
 ```
 
