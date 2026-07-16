@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Marker } from 'react-native-maps';
 import type { FlightState } from '../api/types';
-import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
+import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
 import { getFlightIconType } from '../classify/aircraftIcon';
 import { AircraftGlyph } from './icons/AircraftGlyph';
 
@@ -31,7 +31,7 @@ function AircraftMarkerImpl({ flight, onPress }: AircraftMarkerProps) {
     >
       <AircraftGlyph
         type={getFlightIconType(flight)}
-        color={AIRCRAFT_ICON_COLOR}
+        color={AIRCRAFT_CLASS_COLORS[flight.aircraftClass]}
         size={24}
         rotationDeg={flight.trueTrack ?? 0}
       />

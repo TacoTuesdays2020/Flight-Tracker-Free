@@ -12,7 +12,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTheme } from '../theme/useTheme';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
 import { getAircraftIconType } from '../classify/aircraftIcon';
-import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
+import { AIRCRAFT_CLASS_COLORS, AIRCRAFT_ICON_COLOR } from '../theme/colors';
 import { EMITTER_CATEGORY_LABELS } from '../api/types';
 import { AircraftGlyph } from '../components/icons/AircraftGlyph';
 import {
@@ -36,6 +36,7 @@ export function DetailScreen({ route, navigation }: Props) {
   const { aircraftInfo, routeInfo } = useAircraftDetails(icao24, callsign);
 
   const favorite = isFavorite(icao24);
+  const classColor = state ? AIRCRAFT_CLASS_COLORS[state.aircraftClass] : AIRCRAFT_ICON_COLOR;
 
   const displayName = callsign?.trim() || icao24.toUpperCase();
 
@@ -93,12 +94,12 @@ export function DetailScreen({ route, navigation }: Props) {
             customMapStyle={theme.mapStyle as any}
           >
             {track.length > 1 && (
-              <Polyline coordinates={track} strokeColor={theme.textMuted} strokeWidth={2} />
+              <Polyline coordinates={track} strokeColor={classColor} strokeWidth={2} />
             )}
             <Marker coordinate={position} anchor={{ x: 0.5, y: 0.5 }}>
               <AircraftGlyph
                 type={state ? getAircraftIconType(state) : 'propeller'}
-                color={AIRCRAFT_ICON_COLOR}
+                color={classColor}
                 size={28}
                 rotationDeg={state?.trueTrack ?? 0}
               />
@@ -116,13 +117,13 @@ export function DetailScreen({ route, navigation }: Props) {
         </Text>
       )}
 
-      <View style={[styles.badge, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
+      <View style={[styles.badge, { backgroundColor: classColor + '1F', borderColor: theme.border }]}>
         <AircraftGlyph
           type={state ? getAircraftIconType(state) : 'propeller'}
-          color={theme.text}
+          color={classColor}
           size={13}
         />
-        <Text style={[styles.badgeText, { color: theme.text }]}>
+        <Text style={[styles.badgeText, { color: classColor }]}>
           {state ? AIRCRAFT_CLASS_LABELS[state.aircraftClass] : 'Unknown class'}
         </Text>
       </View>

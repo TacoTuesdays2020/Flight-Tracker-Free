@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { FlightState } from '../api/types';
 import { AIRCRAFT_CLASS_LABELS } from '../classify/aircraftType';
 import { getFlightIconType } from '../classify/aircraftIcon';
-import { AIRCRAFT_ICON_COLOR } from '../theme/colors';
+import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
 import { useTheme } from '../theme/useTheme';
 import { useSettings } from '../context/SettingsContext';
 import { formatAltitude, formatSpeed } from '../utils/format';
@@ -18,6 +18,7 @@ interface FlightListItemProps {
 export function FlightListItem({ flight, onPress, distanceLabel }: FlightListItemProps) {
   const theme = useTheme();
   const { units } = useSettings();
+  const color = AIRCRAFT_CLASS_COLORS[flight.aircraftClass];
 
   return (
     <Pressable
@@ -27,10 +28,10 @@ export function FlightListItem({ flight, onPress, distanceLabel }: FlightListIte
         { backgroundColor: theme.surface, borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
       ]}
     >
-      <View style={[styles.iconWrap, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
+      <View style={[styles.iconWrap, { backgroundColor: color + '1F', borderColor: theme.border }]}>
         <AircraftGlyph
           type={getFlightIconType(flight)}
-          color={AIRCRAFT_ICON_COLOR}
+          color={color}
           size={20}
           rotationDeg={flight.trueTrack ?? 0}
         />

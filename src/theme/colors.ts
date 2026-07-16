@@ -1,13 +1,24 @@
+import type { AircraftClass } from '../api/types';
+
 /**
- * Flight Tracker Free is pure black, white, and grey — no hue anywhere.
- * Aircraft classes are told apart by icon shape (see classify/aircraftIcon)
- * and label text, not color. "Accent" surfaces (selected chips, primary
- * buttons) invert to white-on-black, Apple-control-center style, and get a
- * soft specular highlight rather than a tint.
+ * Flight Tracker Free's chrome — backgrounds, buttons, chips, tab bar — is
+ * pure black, white, and grey; the one deliberate exception is the aircraft
+ * icons themselves, which carry a small, specific accent per class (on top
+ * of already being shape-coded, see classify/aircraftIcon) so the busiest
+ * traffic types pop on the map at a glance. Private/other stay in the
+ * neutral ink to keep the accent list short and readable.
  */
 
-// Every aircraft glyph renders in this single ink.
+// Default ink for aircraft classes that don't get a dedicated accent.
 export const AIRCRAFT_ICON_COLOR = '#f5f5f7';
+
+export const AIRCRAFT_CLASS_COLORS: Record<AircraftClass, string> = {
+  commercial: '#FF9F0A', // orange
+  private: AIRCRAFT_ICON_COLOR,
+  helicopter: '#FFD60A', // yellow
+  military: '#2E7D32', // forest green
+  other: AIRCRAFT_ICON_COLOR,
+};
 
 const NIGHT_MAP_STYLE: unknown[] = [
   { elementType: 'geometry', stylers: [{ color: '#0a0a0a' }] },
