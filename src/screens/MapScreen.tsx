@@ -1,15 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { TabScreenProps } from '../navigation/types';
-import { AircraftMarker } from '../components/AircraftMarker';
+import { LeafletMapView, type LeafletMapViewHandle, type MapMarkerInput } from '../components/map/LeafletMapView';
 import { FilterChips } from '../components/FilterChips';
 import { ErrorBanner } from '../components/ErrorBanner';
 import { useLiveFlights } from '../hooks/useLiveFlights';
 import { useUserLocation, DEFAULT_REGION, type Region } from '../hooks/useUserLocation';
 import type { AircraftClass, BoundingBox } from '../api/types';
 import { AIRCRAFT_CLASS_ORDER } from '../classify/aircraftType';
+import { getFlightIconType } from '../classify/aircraftIcon';
+import { AIRCRAFT_CLASS_COLORS } from '../theme/colors';
 import { useTheme } from '../theme/useTheme';
 import { GlossySurface } from '../components/GlossySurface';
 import { formatLastContact } from '../utils/format';
@@ -31,7 +32,7 @@ type Props = TabScreenProps<'Map'>;
 
 export function MapScreen({ navigation }: Props) {
   const theme = useTheme();
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<LeafletMapViewHandle>(null);
   const { region: initialRegion } = useUserLocation();
   const [boundingBox, setBoundingBox] = useState<BoundingBox>(regionToBoundingBox(initialRegion));
   const [selectedClasses, setSelectedClasses] = useState<Set<AircraftClass>>(
@@ -44,6 +45,21 @@ export function MapScreen({ navigation }: Props) {
   const visibleFlights = useMemo(
     () => flights.filter((f) => selectedClasses.has(f.aircraftClass)),
     [flights, selectedClasses]
+  );
+
+  const markers: MapMarkerInput[] = useMemo(
+    () =>
+      visibleFlights
+        .filter((f) => f.latitude != null && f.longitude != null)
+        .map((f) => ({
+          id: f.icao24,
+          latitude: f.latitude as number,
+          longitude: f.longitude as number,
+          iconType: getFlightIconType(f),
+          color: AIRCRAFT_CLASS_COLORS[f.aircraftClass],
+          rotationDeg: f.trueTrack ?? 0,
+        })),
+    [visibleFlights]
   );
 
   const counts = useMemo(() => {
@@ -61,38 +77,37 @@ export function MapScreen({ navigation }: Props) {
     });
   }, []);
 
-  const onRegionChangeComplete = useCallback((region: Region) => {
+  const onRegionChange = useCallback((region: Region) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setBoundingBox(regionToBoundingBox(region));
     }, 500);
   }, []);
 
+  const handleMarkerPress = useCallback(
+    (id: string) => {
+      const flight = visibleFlights.find((f) => f.icao24 === id);
+      if (flight) {
+        navigation.navigate('Detail', { icao24: flight.icao24, callsign: flight.callsign });
+      }
+    },
+    [visibleFlights, navigation]
+  );
+
   const recenter = useCallback(() => {
-    mapRef.current?.animateToRegion(initialRegion, 500);
+    mapRef.current?.animateToRegion(initialRegion);
   }, [initialRegion]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <MapView
+      <LeafletMapView
         ref={mapRef}
-        style={StyleSheet.absoluteFill}
-        provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
-        userInterfaceStyle="dark"
+        style={StyleSheet.absoluteFillObject}
         initialRegion={initialRegion ?? DEFAULT_REGION}
-        onRegionChangeComplete={onRegionChangeComplete}
-        showsUserLocation
-        showsMyLocationButton={false}
-        customMapStyle={theme.mapStyle as any}
-      >
-        {visibleFlights.map((flight) => (
-          <AircraftMarker
-            key={flight.icao24}
-            flight={flight}
-            onPress={() => navigation.navigate('Detail', { icao24: flight.icao24, callsign: flight.callsign })}
-          />
-        ))}
-      </MapView>
+        markers={markers}
+        onMarkerPress={handleMarkerPress}
+        onRegionChange={onRegionChange}
+      />
 
       <View style={styles.topOverlay} pointerEvents="box-none">
         <FilterChips selected={selectedClasses} onToggle={toggleClass} counts={counts} />

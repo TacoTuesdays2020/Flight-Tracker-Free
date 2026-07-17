@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { RootStackScreenProps } from '../navigation/types';
+import { LeafletMapView, type MapMarkerInput } from '../components/map/LeafletMapView';
 import { InfoRow, InfoSection } from '../components/InfoSection';
 import { LoadingView } from '../components/LoadingView';
 import { useAircraftTelemetry } from '../hooks/useAircraftTelemetry';
@@ -45,6 +45,25 @@ export function DetailScreen({ route, navigation }: Props) {
     return { latitude: state.latitude, longitude: state.longitude };
   }, [state?.latitude, state?.longitude]);
 
+  const mapRegion = useMemo(() => {
+    if (!position) return null;
+    return { ...position, latitudeDelta: 1.2, longitudeDelta: 1.2 };
+  }, [position]);
+
+  const mapMarkers: MapMarkerInput[] = useMemo(() => {
+    if (!position) return [];
+    return [
+      {
+        id: icao24,
+        latitude: position.latitude,
+        longitude: position.longitude,
+        iconType: state ? getAircraftIconType(state) : 'propeller',
+        color: classColor,
+        rotationDeg: state?.trueTrack ?? 0,
+      },
+    ];
+  }, [position, state, icao24, classColor]);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: displayName,
@@ -72,39 +91,17 @@ export function DetailScreen({ route, navigation }: Props) {
       style={{ backgroundColor: theme.background }}
       contentContainerStyle={styles.content}
     >
-      {position && (
+      {position && mapRegion && (
         <View style={[styles.mapWrap, { borderColor: theme.border }]}>
-          <MapView
-            style={StyleSheet.absoluteFill}
-            pointerEvents="none"
-            provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
-            userInterfaceStyle="dark"
-            initialRegion={{
-              latitude: position.latitude,
-              longitude: position.longitude,
-              latitudeDelta: 1.2,
-              longitudeDelta: 1.2,
-            }}
-            region={{
-              latitude: position.latitude,
-              longitude: position.longitude,
-              latitudeDelta: 1.2,
-              longitudeDelta: 1.2,
-            }}
-            customMapStyle={theme.mapStyle as any}
-          >
-            {track.length > 1 && (
-              <Polyline coordinates={track} strokeColor={classColor} strokeWidth={2} />
-            )}
-            <Marker coordinate={position} anchor={{ x: 0.5, y: 0.5 }}>
-              <AircraftGlyph
-                type={state ? getAircraftIconType(state) : 'propeller'}
-                color={classColor}
-                size={28}
-                rotationDeg={state?.trueTrack ?? 0}
-              />
-            </Marker>
-          </MapView>
+          <LeafletMapView
+            interactive={false}
+            followRegion
+            initialRegion={mapRegion}
+            region={mapRegion}
+            markers={mapMarkers}
+            track={track}
+            trackColor={classColor}
+          />
         </View>
       )}
 

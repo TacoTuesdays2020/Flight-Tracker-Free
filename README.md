@@ -7,18 +7,21 @@ identification, and route info — no paid API keys required.
 
 ## Features
 
-- **Live map** of air traffic (`react-native-maps`) centered on your location,
-  refreshing on a timer and re-querying as you pan/zoom, styled as a black
-  and white map on both iOS and Android.
+- **Live map** of air traffic centered on your location, refreshing on a
+  timer and re-querying as you pan/zoom, styled dark to match the rest of
+  the app. Rendered with Leaflet inside a WebView (`src/components/map`)
+  rather than `react-native-maps`, so it needs no native module compiled
+  into the app — it runs in the stock Expo Go client with no custom dev
+  build, using free CartoDB dark tiles over OpenStreetMap data (no API key).
 - **Commercial / Private / Helicopter / Military / Other** filtering.
-- **Type-specific aircraft icons** — every aircraft renders in the same
-  monochrome ink; the marker *shape* is what reflects the airframe: airliner,
-  private jet, small single-engine propeller (Cessna-style), helicopter, or
-  military, inferred from OpenSky's ADS-B emitter category (see
-  `src/classify/aircraftIcon.ts`).
-- **Pure black/white/grey UI** with glossy, specular-highlighted buttons and
-  frosted-glass surfaces (tab bar, pills) — no color anywhere except white on
-  black for selected/primary state.
+- **Type-specific aircraft icons** — marker *shape* reflects the airframe
+  (airliner, private jet, small single-engine propeller/Cessna-style,
+  helicopter, or military), inferred from OpenSky's ADS-B emitter category
+  (see `src/classify/aircraftIcon.ts`). Commercial, military, and helicopter
+  markers also carry a small accent color (orange/forest green/yellow);
+  private and other stay in the neutral ink.
+- **Pure black/white/grey UI** otherwise, with glossy, specular-highlighted
+  buttons and frosted-glass surfaces (tab bar, pills).
 - **Searchable flight list** sorted by distance, with the same filters.
 - **Flight detail screen**: live position, altitude (baro + GPS), ground
   speed, heading, vertical rate, squawk, position source, a mini live-updating
@@ -71,7 +74,7 @@ Then open the app in Expo Go (scan the QR code) or run a native build:
 ```bash
 npm run ios       # requires macOS + Xcode
 npm run android   # requires Android Studio / an emulator or device
-npm run web       # map screens require a native map provider and won't render on web
+npm run web       # untested target; the app is built and verified for iOS/Android
 ```
 
 Location permission is requested on first launch to center the map; if
@@ -94,7 +97,7 @@ App.tsx                     # Providers + root navigator
 src/
   api/                       # OpenSky + hexdb.io clients and shared types
   classify/                  # Commercial/private/helicopter heuristic + icon-shape mapping
-  components/                # Map markers, filter chips, list rows, info panels
+  components/                # WebView/Leaflet map, filter chips, list rows, info panels
   context/                   # Settings & Favorites (AsyncStorage/SecureStore)
   hooks/                     # useLiveFlights, useAircraftTelemetry, useAircraftDetails, useUserLocation
   navigation/                # Bottom tabs (Map/List/Favorites/Settings) + Detail stack screen
@@ -110,5 +113,6 @@ src/
 - Aircraft/route metadata from hexdb.io is best-effort and frequently
   `Unknown` for private, GA, and non-scheduled flights.
 - Aircraft-class filtering is a heuristic, not authoritative operator data.
-- The web build (`npm run web`) won't render the map screens, since
-  `react-native-maps` targets iOS/Android only.
+- The map's tiles and Leaflet script load from a CDN inside the WebView, so
+  it needs the device to have a live internet connection (same as any other
+  screen — the app has no offline map cache).

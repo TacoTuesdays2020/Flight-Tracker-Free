@@ -20,26 +20,6 @@ export const AIRCRAFT_CLASS_COLORS: Record<AircraftClass, string> = {
   other: AIRCRAFT_ICON_COLOR,
 };
 
-const NIGHT_MAP_STYLE: unknown[] = [
-  { elementType: 'geometry', stylers: [{ color: '#0a0a0a' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#8e8e93' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#000000' }] },
-  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-  { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#2c2c2e' }] },
-  { featureType: 'administrative.country', elementType: 'geometry.stroke', stylers: [{ color: '#3a3a3c' }] },
-  { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
-  { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#141416' }] },
-  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1c1c1e' }] },
-  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#000000' }] },
-  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#2c2c2e' }] },
-  { featureType: 'road.arterial', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-  { featureType: 'road.local', stylers: [{ visibility: 'off' }] },
-  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#000000' }] },
-  { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#48484a' }] },
-];
-
 export const theme = {
   background: '#000000',
   surface: '#121214',
@@ -56,7 +36,6 @@ export const theme = {
   glossHigh: 'rgba(255,255,255,0.30)',
   glossHighOnLight: 'rgba(255,255,255,0.85)',
   glossLow: 'rgba(255,255,255,0)',
-  mapStyle: NIGHT_MAP_STYLE,
 };
 
 export type Theme = typeof theme;
